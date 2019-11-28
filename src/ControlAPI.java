@@ -188,4 +188,10 @@ public class ControlAPI {
         return array;
     }
 
+    @GET
+    @Path("/card/{cardkey}/{areaid}")
+    public boolean isAuthorized(@PathParam("areaid")int areaid, @PathParam("cardkey")String cardkey){
+        boolean res = Connect.isAuthorized(areaid, cardkey);
+        return res;
+    }
 }

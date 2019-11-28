@@ -242,4 +242,30 @@ public class Connect {
         }
         return logs;
     }
+
+    //Authorized
+    public static boolean isAuthorized(int areaid, String cardkey){
+        ResultSet rs = Connect.executeQuery("select userid from card where cardkey = " + "'" + cardkey + "'");
+        int userid = 0;
+        try{
+            if(rs == null){
+                System.out.println("Incorrect input");
+                return false;
+            }
+            rs.next();
+            userid = rs.getInt("userid");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        List<Integer> list = new ArrayList<>();
+        rs = Connect.executeQuery("select areaid from authority where userid =" + userid);
+        try{
+            while(rs.next()){
+                list.add(rs.getInt("areaid"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list.contains(areaid) ? true : false;
+    }
 }
