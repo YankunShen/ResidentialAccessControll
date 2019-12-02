@@ -194,4 +194,7 @@ public class ControlAPI {
         boolean res = Connect.isAuthorized(areaid, cardkey);
         return res;
     }
+
+
+
 }
