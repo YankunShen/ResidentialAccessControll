@@ -1,7 +1,6 @@
 import roles.*;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,9 +11,9 @@ import java.util.Map;
 
 public class Connect {
     protected static String dbClassName = "com.mysql.jdbc.Driver";     //Database Connection Class
-    protected static String dbUrl = "jdbc:mysql://localhost:3306/accessControl?autoReconnect=true&useSSL=false";  //Database Connection URL
+    protected static String dbUrl = "jdbc:mysql://45.32.225.3:3306/access_control?autoReconnect=true&useSSL=false";  //Database Connection URL
     protected static String dbUser = "root";		    //username
-    protected static String dbPwd = "3038661";			//password
+    protected static String dbPwd = "UWTacoma123!";			//password
     private static Connection conn = null;
 
     private Connect() {										//Constructor
