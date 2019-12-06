@@ -1,12 +1,22 @@
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 import roles.*;
 
 import javax.json.*;
+import javax.jws.WebMethod;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.StringReader;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -219,5 +229,48 @@ public class ControlAPI {
     }
 
 
+    @GET
+    @Path("/weather/{city}")
+    @Produces("text/xml")
+    public Document getWeatherApi(@PathParam("city")String city) throws IOException {
+        Document document = getWeather(city);
+        return document;
+    }
+
+    @WebMethod
+    public Document getWeather(String city) throws IOException {
+        String wsurl = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=68e0ff6090075986039364ab84df828b&mode=xml";
+        URL url = new URL(wsurl);
+        URLConnection urlConnection = url.openConnection();
+        HttpURLConnection httpConn = (HttpURLConnection)urlConnection;
+        httpConn.setRequestProperty("Content-Type", "text/xml; charset=utf-8");
+        httpConn.setRequestMethod("GET");
+        httpConn.setDoOutput(true);
+        OutputStream out = httpConn.getOutputStream();
+        InputStreamReader isr = new InputStreamReader(httpConn.getInputStream());
+        BufferedReader in = new BufferedReader(isr);
+        String outputString = "";
+        String responseString = "";
+        while ((responseString = in.readLine()) != null) {
+            outputString = outputString + responseString;
+        }
+        Document document = parseXmlFile(outputString);
+        return document;
+    }
+
+    private Document parseXmlFile(String in) {
+        try {
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            InputSource is = new InputSource(new StringReader(in));
+            return db.parse(is);
+        } catch (ParserConfigurationException e) {
+            throw new RuntimeException(e);
+        } catch (SAXException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 }
