@@ -1,6 +1,5 @@
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jdk.nashorn.internal.parser.JSONParser;
 import roles.*;
 
 import javax.json.*;
@@ -74,7 +73,7 @@ public class ControlAPI {
     @Path("/user")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("text/json")
-    public Response addUser( User user){
+    public Response addUser(User user){
         Response.ResponseBuilder builder = Response.status(Response.Status.BAD_REQUEST);
         int res = Connect.addUser(user);
         if(res != -1){
@@ -83,7 +82,20 @@ public class ControlAPI {
         return builder.build();
 
     }
+    //update user
+    @PATCH
+    @Path("/user")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces("text/json")
+    public Response updateUser( User user){
+        Response.ResponseBuilder builder = Response.status(Response.Status.BAD_REQUEST);
+        int res = Connect.updateUser(user);
+        if(res != -1){
+            builder.status(Response.Status.OK);
+        }
+        return builder.build();
 
+    }
     //delete user by id
     @DELETE
     @Path("/user/{id}")
@@ -155,6 +167,17 @@ public class ControlAPI {
     public Response addCard(Card card){
         Response.ResponseBuilder builder = Response.status(Response.Status.BAD_REQUEST);
         int res = Connect.addCard(card);
+        if(res != -1){
+            builder.status(Response.Status.OK);
+        }
+        return builder.build();
+    }
+
+    @DELETE
+    @Path("/card/{cardkey}/{userid}")
+    public Response deleteCard(@PathParam("cardkey")String cardkey, @PathParam("userid")int userid){
+        Response.ResponseBuilder builder = Response.status(Response.Status.BAD_REQUEST);
+        int res = Connect.deleteCard(cardkey, userid);
         if(res != -1){
             builder.status(Response.Status.OK);
         }

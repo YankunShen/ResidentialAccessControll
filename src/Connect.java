@@ -132,8 +132,7 @@ public class Connect {
     public static int addUser(User user) {
         int res = 0;
         try {
-            String sql = "insert into user(id, name, gender, phone, email) value(" +
-                    user.getId() + "," +
+            String sql = "insert into user(name, gender, phone, email) value(" +
                     "'" + user.getName() + "'," +
                     "'" + user.getGender() + "'," +
                     "'" + user.getPhone() + "'," +
@@ -145,6 +144,23 @@ public class Connect {
         return res;
     }
 
+    //update user
+    public static int updateUser(User user) {
+        int res = 0;
+        try {
+            String sql = "update user set " +
+                    "name='" + user.getName() + "'," +
+                    "gender='" + user.getGender() + "'," +
+                    "phone='" + user.getPhone() + "'," +
+                    "email='" + user.getEmail() + "' " +
+                    "where id=" + user.getId();
+            System.out.println(sql);
+            res = Connect.executeUpdate(sql);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return res;
+    }
 
     //delete user
     public static int deleteUser(int id){
@@ -214,13 +230,26 @@ public class Connect {
     public static int addCard(Card card){
         int res = 0;
         try{
-            String sql = "insert into card(userid, cardkey) value (" + card.getUserid() + "," + card.getCardkey() + ")";
+            String sql = "insert into card(userid, cardkey) value (" + card.getUserid() + ",'" + card.getCardkey() + "')";
             res = Connect.executeUpdate(sql);
         }catch(Exception e){
             e.printStackTrace();
         }
         return res;
     }
+
+    //delete card
+    public static int deleteCard(String cardkey, int userid){
+        int res = 0;
+        try{
+            String sql = "delete from card where userid=" + userid + " and cardkey='" + cardkey + "'";
+            res = Connect.executeUpdate(sql);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return res;
+    }
+
 
     //get log
     public static List<Log> getLog(){
